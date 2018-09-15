@@ -2,11 +2,12 @@
 header("Content-Type: text/html;charset=utf-8");
 include __DIR__ . '/../config/cfg_main.php';
 include ENGINE_DIR . 'ngn_autoload.php';
+include ENGINE_DIR . "kint.php";
 
 session_start();
 
 if (!$path = preg_replace(['#^/#', '#[?].*#'],"", $_SERVER['REQUEST_URI'])) {
-    $path = 'invoices';
+    $path = 'links';
 }
 
 $parts = explode('/', $path);
