@@ -2,7 +2,10 @@
 
 function getAllPayouts($from, $till) {
     return queryAll("SELECT
-    p.*,
+    p.id,
+    p.amount,
+    p.date,
+    p.description,
     l.id as link_id,
     l.invoice_id,
     l.invoice_amount,
@@ -16,9 +19,29 @@ function getAllPayouts($from, $till) {
     );
 }
 
+function getAllPayoutsGrouped($from, $till) {
+    return queryAll("SELECT
+    p.id,
+    p.amount,
+    p.date,
+    p.description,
+    SUM(l.invoice_amount) as invoice_amount,
+    SUM(l.expense_amount) as expense_amount,
+    p.amount - COALESCE(SUM(l.invoice_amount), 0) - COALESCE(SUM(l.expense_amount), 0) as difference
+    FROM tbl_cash_payments as p
+    LEFT JOIN
+      tbl_links as l ON l.cash_payment_id = p.id
+    WHERE date >= '{$from}' AND date <= '{$till}'
+    GROUP BY p.id
+    ORDER BY id ASC"
+    );
+}
+
 function getAllInvoices($from, $till) {
     return queryAll("SELECT
-    i.*,
+    i.id,
+    i.date,
+    i.subtotal,
     l.id as link_id,
     l.cash_payment_id,
     l.cash_payment_amount,
@@ -35,7 +58,10 @@ function getAllInvoices($from, $till) {
 }
 
 function getAllExpenses($from, $till) {
-    return queryAll("SELECT e.*,
+    return queryAll("SELECT
+    e.id,
+    e.date,
+    e.total,
     l.id as link_id,
     l.cash_payment_id,
     l.cash_payment_amount,

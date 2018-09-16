@@ -16,7 +16,7 @@
         <div class="col-md-3">
             <input name="type" value="changes" hidden/>
             <button form="linkDocsForm" formaction="/links/update" name="submitChanges" id="submitChanges"
-                    type="button" class="btn btn-primary">Insert changes to
+                    type="button" class="btn btn-primary">Send  changes to
                 database
             </button>
         </div>
